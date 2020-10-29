@@ -5,7 +5,8 @@
 **Content Disclaimer**: This dataset contains real title posts scraped from the r/depression subreddit, and some of the titles contain language that is not safe for work, crude, or offensive. The full dataset is available as `depression.csv`, `preprocessed_thoughts.csv`, `thoughts.csv`, and `token_df.csv`. Unfortunately, I did not provide a sanitized version of my dataset because the words contained were important for the analysis and understanding of the model. Please note that the model, the dataset, and the techniques used are not perfect. If you have any concerns about working with this dataset, looking at my analysis, or the topic in general, you can skip my content overall or click [here](http://iamsorry.com/).
 
 
-### __Table of Contents__
+### __Table of Contents__ 
+**ignore hyperlinks, changed due to transfer**
 
 - [1-DataWrangle-Preprocessing](https://git.generalassemb.ly/laternader/project_3/blob/master/deliverables/1-DataWrangle-Preprocessing.ipynb)
   - Contains code for extracting the post titles and the preprocessing they underwent before EDA
