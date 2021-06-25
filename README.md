@@ -2,28 +2,24 @@
 
 # <font color='red'>WARNING</font>
 
-**Content Disclaimer**: This dataset contains real title posts scraped from the r/depression subreddit, and some of the titles contain language that is not safe for work, crude, or offensive. The full dataset is available as `depression.csv`, `preprocessed_thoughts.csv`, `thoughts.csv`, and `token_df.csv`. Unfortunately, I did not provide a sanitized version of my dataset because the words contained were important for the analysis and understanding of the model. Please note that the model, the dataset, and the techniques used are not perfect. If you have any concerns about working with this dataset, looking at my analysis, or the topic in general, you can skip my content overall or click [here](http://iamsorry.com/).
+**Content Disclaimer**: This dataset contains real title posts scraped from the r/depression subreddit, and some of the titles contain language that is not safe for work, crude, or offensive. The full dataset is available as `depression.csv`, `preprocessed_thoughts.csv`, `thoughts.csv`, and `token_df.csv`. Unfortunately, I did not provide a sanitized version of my dataset because the words contained were important for the analysis and understanding of the model. Please note that the model, the dataset, and the techniques used are not perfect. 
 
 
 ### __Table of Contents__ 
 **ignore hyperlinks, changed due to transfer**
 
-- [1-DataWrangle-Preprocessing](https://git.generalassemb.ly/laternader/project_3/blob/master/deliverables/1-DataWrangle-Preprocessing.ipynb)
+- [1-DataWrangle-Preprocessing](https://github.com/laternader/showerthoughts-or-depression/blob/main/1-DataWrangle-Preprocessing.ipynb)
   - Contains code for extracting the post titles and the preprocessing they underwent before EDA
-- [2-EDA](https://git.generalassemb.ly/laternader/project_3/blob/master/deliverables/2-EDA.ipynb)
+- [2-EDA](https://github.com/laternader/showerthoughts-or-depression/blob/main/2-EDA.ipynb)
   - EDA on the title of posts using `CountVectorizer()` as my tokenizer
-- [2.1-EDA-OwnTokens](https://git.generalassemb.ly/laternader/project_3/blob/master/deliverables/2.1-EDA-OwnTokens.ipynb)
+- [2.1-EDA-OwnTokens](https://github.com/laternader/showerthoughts-or-depression/blob/main/2.1-EDA-OwnTokens.ipynb)
   - EDA on my lemmatized/porterstemmed tokens
-- [3-Modeling](https://git.generalassemb.ly/laternader/project_3/blob/master/deliverables/3-Modeling.ipynb)
+- [3-Modeling](https://github.com/laternader/showerthoughts-or-depression/blob/main/3-Modeling.ipynb)
   - Has multiple pipelines, gridsearches and models that include RandomForests, LogisticRegression, and MultinomialNB on the train and test datasets
-- [4-Model-Comparisons](https://git.generalassemb.ly/laternader/project_3/blob/master/deliverables/4-Model-Comparisons.ipynb)
+- [4-Model-Comparisons](https://github.com/laternader/showerthoughts-or-depression/blob/main/4-Model-Comparisons.ipynb)
   - Compares what I considered my best model, the random forest model, and a wildcard model that I thought had good results with some exceptions
-- [Python File](https://git.generalassemb.ly/laternader/project_3/blob/master/deliverables/p3_tools.py)
+- [Python File](https://github.com/laternader/showerthoughts-or-depression/blob/main/p3_tools.py)
   - This file contains functions I created to kind of automate and pre-clean subreddit posts before it went through my pre-processing and cleaning
-- [Datasets](https://git.generalassemb.ly/laternader/project_3/tree/master/deliverables/saved_data)
-  - A folder containing all the data that was extracted from Reddit and used on my models 
-- [Pickled Assets](https://git.generalassemb.ly/laternader/project_3/tree/master/deliverables/assets)
-  - Pickled models and results to help with model comparisons.
   
 ---  
 ## Problem Statement
@@ -89,12 +85,9 @@ At the end of the preprocessing, I ended up with 5 different csv files on which 
 ## Discussion
 After completing the preprocessing of the data, I proceeded to look at the descriptive stats. One thing to note was that the maximum amount of characters allowed was 300, with the exception of one post with 301. It seems that the title was limited to users so that the bulk of their post discussion and content could go into self text. This was very prevalent in the `r/depression` subreddit considering most people have a lot to say when it comes to expressing their emotions or displaying ample amounts of sadness, irritation, or frustration through text. This is one reason I dropped the *selftext* column in the models because it would have made the analysis to obvious. I wanted this model to somewhat be applicable (if possible) to other forms of social media, such as Twitter. I know in Twitter, the maximum amount of character input is 140. 
 
-![Distribution of Word Counts](https://git.generalassemb.ly/laternader/project_3/blob/master/deliverables/imgs/word_dist.png)
-*fig. 1*
-
 Another thing I noticed in the descriptive statistics was that there was a lot of repeated post titles in the `r/depression` subreddit. This brought the unique amount of post titles down to __9593__, about 400+ less than the original 10,000 posts scraped. I debated about whether or not I should drop down the duplicates for my models but I assumed the reason for the repetition was that when it came to describing a title in that subreddit, people kept it short because the contents in *selftext* was the main purpose of the post. I kept them to maintain their weight of their words (also because the models I selected for comparisons utilized PorterStemmed words rather than relying on CountVectorizer and TfidVectorizers defaults). 
 
-*fig. 2*
+
 |            Top Titles from "r/depression" | count |
 |------------------------:|-------|
 |                    Help |    16 |
@@ -109,18 +102,9 @@ Another thing I noticed in the descriptive statistics was that there was a lot o
 |             I need help |     6 |
 
 
-The distribution graph below adds to the idea that most `r/depression` redditors would put most of their content on *selftext* section of the post. Just looking at the fig. 1 and fig. 2 confirms my assumption on the trend that repeats in `r/depression`. 
+The distribution graph below adds to the idea that most `r/depression` redditors would put most of their content on *selftext* section of the post. 
 
-I had an assumption with repeating title names, then repeating words must be common. I wanted to figure out what other common words appeared from both subreddits. The outlier being many variants of the word "depress", I wanted to see if there were any trigger words that would also come out of this. I looked at the top 25 PorterStemmed words to figure this out. As I expected, "depress" is the most common word in `r/depression` but it was interesting to see that "help" wasn't as high as I expected considering it is the most common title in the subreddit (fig. 3). This is also might be due to the fact that people with depression tend to not reach out for help as much as we assume they would. The `r/showerthoughts` has "people" as it's top word, the only thing I can assume that the titles there are used to get the attention of people by making a post that could be applicable to everyone.
-
-![Top Words from Depression](https://git.generalassemb.ly/laternader/project_3/blob/master/deliverables/imgs/depression-words.png)
-*fig. 3*
-
-![Top Words from Shower Thoughts](https://git.generalassemb.ly/laternader/project_3/blob/master/deliverables/imgs/shower-words.png)
-*fig. 4*
-
-![Top Words Overall](https://git.generalassemb.ly/laternader/project_3/blob/master/deliverables/imgs/top-words.png)
-*fig. 5*
+I had an assumption with repeating title names, then repeating words must be common. I wanted to figure out what other common words appeared from both subreddits. The outlier being many variants of the word "depress", I wanted to see if there were any trigger words that would also come out of this. I looked at the top 25 PorterStemmed words to figure this out. As I expected, "depress" is the most common word in `r/depression` but it was interesting to see that "help" wasn't as high as I expected considering it is the most common title in the subreddit. This is also might be due to the fact that people with depression tend to not reach out for help as much as we assume they would. The `r/showerthoughts` has "people" as it's top word, the only thing I can assume that the titles there are used to get the attention of people by making a post that could be applicable to everyone.
 
 Once I looked as much as I could for anymore trends, I proceeded to modeling my data. I went through many different hyper parameters and used many models. I used LogisticRegression, MultinomialNB, and RandomForestClassifier as my main models for this project. I also used CountVectorizer and TfidVectorizer to turn my data into a bunch of columns containing 1s and 0s. This was so that I could have a dataframe that was prepped for the classification models.
 
@@ -147,19 +131,18 @@ Best Test Score: 0.9216666666666666
 ```
 As you can see, the variance was not high and neither was the bias. It may not have been accurate as another model I had in mind but the overfitting here was much less, unlike my forest model that I compared it to.
 
-The last main reason why I selected my "best" model was due to the consistency in specificity and sensitivity. I wanted to select a model that remained consistent but was as accurate as possible. I wanted to minimize false positives and false negatives to the best of my ability so I optimized for the best one. The numbers and confusion matrix (fig. 6) below were from my best model:
+The last main reason why I selected my "best" model was due to the consistency in specificity and sensitivity. I wanted to select a model that remained consistent but was as accurate as possible. I wanted to minimize false positives and false negatives to the best of my ability so I optimized for the best one. The numbers below were from my best model:
 ```python
 Best Specificity: 0.9232643118148599 
 Best Sensitivity: 0.9200844390832328
 ```
-![Confusion Matrix of the best model](https://git.generalassemb.ly/laternader/project_3/blob/master/deliverables/imgs/bestconf.png)
-*fig. 6*
+
 
 
 # Why?
 These were the top 25 words in determining if a post was from the `r/depression` subreddit as well as their odds and log odds. Just looking at these words we can get an idea about the things people post about online and see if that person is depressed or not. 
 
-*fig. 7*
+
 | word(s) | coefficient | exp_coef |
 | --- | --- | --- |
 | depress | 9.040511 | 8438.084964 |
